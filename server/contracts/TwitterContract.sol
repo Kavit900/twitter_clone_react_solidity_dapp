@@ -31,37 +31,25 @@ contract TwitterContract {
     }
 
     // Method to get all the Tweets
-    function getAllTweets() external view returns (Tweet[] memory) {
-        Tweet[] memory temporary = new Tweet[](tweets.length);
-        uint counter = 0;
-        for(uint i=0; i<tweets.length; i++) {
-            if(tweets[i].isDeleted == false) {
-                temporary[counter] = tweets[i];
-                counter++;
-            }
-        }
+   function getAllTweets() external view returns(Tweet[] memory) {
+        Tweet[] memory result = new Tweet[]; //create temporary Tweet[] array with dynamic size
 
-        Tweet[] memory result = new Tweet[](counter);
-        for(uint i=0; i<counter; i++) {
-            result[i] = temporary[i];
+        for(uint i=0;i<tweets.length;i++){  //iterate through the tweets array
+            if(tweets[i].isDeleted == false){ //only check the ones that are not deleted
+                result.push(tweets[i]); //then push the tweet into result[]
+            }
         }
         return result;
     }
-
-    // Method to get only your Tweets
+    
+   // Method to get only your Tweets
     function getMyTweets() external view returns (Tweet[] memory) {
-        Tweet[] memory temporary = new Tweet[](tweets.length);
-        uint counter = 0;
-        for(uint i=0; i<tweets.length; i++) {
-            if(tweetToOwner[i] == msg.sender && tweets[i].isDeleted == false) {
-                temporary[counter] = tweets[i];
-                counter++;
+        Tweet[] memory result = new Tweet[]; //create temporary Tweet[] array with dynamic size
+       
+        for(uint i=0;i<tweets.length;i++){ //iterate through all the tweets[] array
+            if(tweets[i].isDeleted == false && tweetToOwner[i] == msg.sender){  //if tweet is not deleted AND if the tweet belongs to msg.sender
+                result.push(tweets[i])  //then push the tweet into result[]
             }
-        }
-
-        Tweet[] memory result = new Tweet[](counter);
-        for(uint i=0; i<counter; i++) {
-            result[i] = temporary[i];
         }
         return result;
     }
